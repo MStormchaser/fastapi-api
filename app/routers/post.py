@@ -18,7 +18,7 @@ router = APIRouter(
 # a list of posts. From typing we have to import list and than put
 # the response model in a list.
 # @router.get("/", response_model=list[schemas.PostOut])
-@router.get("/", response_model=list[schemas.PostResponse])
+@router.get("/")
 def get_posts(db: Session = Depends(get_db), current_user = Depends(oauth2.get_current_user),
               limit: int = 10, skip: int = 0, search: Optional[str] = ""):
     '''cur.execute("""SELECT * FROM posts """)
@@ -30,18 +30,21 @@ def get_posts(db: Session = Depends(get_db), current_user = Depends(oauth2.get_c
     '''
 
     # print(limit)
-    posts = db.query(models.Post).filter(models.Post.title.contains(search)).limit(limit).offset(skip).all()
-
+    posts_query = db.query(models.Post).filter(models.Post.title.contains(search)).limit(limit).offset(skip)
+    posts = posts_query.all()
     # We perform a left ourter join between Post on left and Votes on right
     # We count the occurance of post_id in the new table
     # For count() we have to import -> from sqlalchemy import func
     # Rename column .label()
-    '''results = db.query(models.Post, func.count(models.Votes.post_id).label("votes")).join(
-        models.Votes, models.Votes.post_id == models.Post.id, isouter=True).group_by(models.Post.id)'''
+    results_alchemy = db.query(models.Post, func.count(models.Votes.post_id).label("votes")).join(
+        models.Votes, models.Votes.post_id == models.Post.id, isouter=True).group_by(models.Post.id).all()
     
     results = database.cur.execute("select posts.*, count(votes.post_id) as votes from posts left join votes on votes.post_id = posts.id group by posts.id")
+    field_name = [desc[0] for desc in database.cur.description]
+    posts_named = [{field_name[i]: value[i] for i in range(len(field_name))} for value in results.fetchall()]
+    print(posts_named)
 
-    return posts
+    return results_alchemy
 
 
 # The id field is a path parameter
