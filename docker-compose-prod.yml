@@ -1,0 +1,51 @@
+version: '3'
+services:
+  api:
+    # In production we don't build the image
+    # In production we pull the image from docker hub
+    image: realstormchaser/fastapi-tutorial
+    # hosts: <port on localhost>:<port on container>
+    depends_on:
+      - postgres
+    command: bash -c "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000"
+    ports: 
+      - 80:8000
+    # Either define path to env file
+    # env_file:
+    #   - ./.env
+    # or provide all env vars
+    environment:
+      - DATABASE_HOSTNAME=${DATABASE_HOSTNAME}
+      - DATABASE_PORT=${DATABASE_PORT}
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+      - DATABASE_NAME=${DATABASE_NAME}
+      - DATABASE_USERNAME=${DATABASE_USERNAME}
+      - SECRET_KEY=${SECRET_KEY}
+      - ALGORITHM=${ALGORITHM}
+      - ACCESS_TOKEN_EXPIRE_MINUTES=${ACCESS_TOKEN_EXPIRE_MINUTES}
+
+
+  postgres:
+    image: postgres
+    environment:
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+      - POSTGRES_DB=${DATABASE_NAME}
+
+    volumes:
+      - postgres-db:/var/lib/postgresql/data
+
+  
+  pg-admin:
+    image: dpage/pgadmin4:7
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
+      # default 5050
+      - PGADMIN_LISTEN_PORT=${PGADMIN_LISTEN_PORT}
+
+    ports:
+      - 5050:5050
+
+
+volumes:
+  postgres-db:
