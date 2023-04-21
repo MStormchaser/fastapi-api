@@ -20,7 +20,7 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
 # Dependency
-# In every path operatio nwe need to pass a session
+# In every path operatio we need to pass a session
 def get_db():
     db = SessionLocal()
     try:

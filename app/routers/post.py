@@ -42,7 +42,7 @@ def get_posts(db: Session = Depends(get_db), current_user = Depends(oauth2.get_c
     results = database.cur.execute("select posts.*, count(votes.post_id) as votes from posts left join votes on votes.post_id = posts.id group by posts.id")
     field_name = [desc[0] for desc in database.cur.description]
     posts_named = [{field_name[i]: value[i] for i in range(len(field_name))} for value in results.fetchall()]
-    print(posts_named)
+    # print(posts_named)
 
     return results_alchemy
 

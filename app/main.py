@@ -8,6 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
+app
 # TEST in Browser Dev Tools - You need to be on a website in the origins list
 # type ("in console
 # fetch("http://localhost:8000/").then(res => res.json()).then(console.log)
