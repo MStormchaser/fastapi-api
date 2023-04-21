@@ -3,8 +3,11 @@ name: Build and Deploy Code
 on: [push, pull_request]
 
 jobs:
+  # just job name
   fastapi_training_job1:
+    # repo > setting > environment: namem
     environment: testing
+    # secrets from githup actions
     env:
       DATABASE_HOSTNAME: ${{secrets.DATABASE_HOSTNAME}}
       DATABASE_PORT: ${{secrets.DATABASE_PORT}}
@@ -14,8 +17,31 @@ jobs:
       SECRET_KEY: ${{secrets.SECRET_KEY}}
       ALGORITHM: ${{secrets.ALGORITHM}}
       ACCESS_TOKEN_EXPIRE_MINUTES: ${{secrets.ACCESS_TOKEN_EXPIRE_MINUTES}}
+    # basically just says the os this shoudl be run on
     runs-on: ubuntu-latest
+    
+    # Service containers to run with `container-job`
+    services:
+      # Label used to access the service container
+      postgres:
+        # Docker Hub image
+        image: postgres
+        # Provide the password for postgres
+        env:
+          POSTGRES_PASSWORD: ${{secrets.DATABASE_PASSWORD}}
+          POSTGRES_DB: ${{secrets.DATABASE_NAME}}_test
+        ports:
+          - 5432:5432  
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    # basically just command line steps      
     steps:
+        # https://github.com/marketplace/actions/setup-python
       - name: pulling git repo
         uses: actions/checkout@v3
       - name: Install Python v 3.9
