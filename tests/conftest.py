@@ -25,7 +25,7 @@ from app import database
 
 # Setup test database _test
 # toggle word wrap alt + z
-SQL_ALCHEMY_DATABASE_URL_TEST = f'postgresql+psycopg://{settings.database_username}:{settings.database_password}@{settings.database_hostname}:{settings.database_port}/pytest_fastapi_test'
+SQL_ALCHEMY_DATABASE_URL_TEST = f'postgresql+psycopg://{settings.database_username}:{settings.database_password}@{settings.database_hostname}:{settings.database_port}/{settings.database_name}_test'
 
 
 engine = create_engine(SQL_ALCHEMY_DATABASE_URL_TEST)
