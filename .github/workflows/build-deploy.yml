@@ -100,8 +100,10 @@ jobs:
           host: ${{ secrets.PROD_HOST }}
           username: ${{ secrets.PROD_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          Port: 22
           script: |
             cd app/src
             git pull
-            echo ${{ secrets.PROD_PASSWORD }} | sudo -S systemctl restart api
+            git status
+          # echo ${{ secrets.PROD_PASSWORD }} | sudo -S systemctl restart api
 
