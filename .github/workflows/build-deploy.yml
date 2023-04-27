@@ -93,12 +93,12 @@ jobs:
     needs: [job1_build]
 
     steps:
-      - name: executing remote ssh commands using password
+      - name: executing remote ssh commands using password and deploying to Ubuntu
         uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          password: ${{ secrets.PASSWORD }}
+          username: ${{ secrets.PROD_USERNAME }}
+          password: ${{ secrets.PROD_PASSWORD }}
           port: ${{ secrets.PORT }}
           script: |
             cd app/src
