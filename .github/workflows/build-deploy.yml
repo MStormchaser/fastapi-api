@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 jobs:
   # just job name
-  fastapi_training_job1:
+  job1_build:
     # repo > settings > environment: name
     environment: testing
     # secrets from githup actions
@@ -83,4 +83,16 @@ jobs:
           rm -rf /tmp/.buildx-cache
           mv /tmp/.buildx-cache-new /tmp/.buildx-cache
 
+      - name: Docker image digest
+        run: echo $ {{ steps.docker_build.output.digest }}
+
+  Job2_deploy:
+    runs-on: ubuntu-latest
+    # Jobs on github run in parallel. If we don't want that we have to define
+    # which job to complete first before executing the next job
+    needs: [job1_build]
+
+    steps:
+      - name: Print some stuff
+        run: echo "Hello job2 are you ready to Deploy?"
 
