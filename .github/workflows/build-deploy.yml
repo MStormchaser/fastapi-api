@@ -5,7 +5,7 @@ on: [push, pull_request]
 jobs:
   # just job name
   fastapi_training_job1:
-    # repo > setting > environment: namem
+    # repo > settings > environment: name
     environment: testing
     # secrets from githup actions
     env:
@@ -73,7 +73,7 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/fastapi-tutorial:latest
-          cache-from: type=registry,ref=user/app:buildcache
-          cache-to: type=registry,ref=user/app:buildcache,mode=max
+          # cache-from: type=registry,ref=user/app:buildcache
+          # cache-to: type=registry,ref=user/app:buildcache,mode=max
 
 
