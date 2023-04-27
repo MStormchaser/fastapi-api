@@ -95,11 +95,11 @@ jobs:
 
     steps:
       - name: executing remote ssh commands using password and deploying to Ubuntu
-        uses: appleboy/ssh-action@v0.1.10
+        uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.PROD_HOST }}
           username: ${{ secrets.PROD_USERNAME }}
-          password: ${{ secrets.PROD_PASSWORD }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd app/src
             git pull
